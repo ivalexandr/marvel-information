@@ -1,0 +1,43 @@
+.header {
+  padding: 50px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__main {
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 33px;
+    color: #000;
+    &_red {
+      color: #9f0013;
+    }
+  }
+
+  &__navigate {
+    margin: 0;
+    &_char,
+    &_comics {
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 28px;
+      text-decoration: none;
+      &:visited {
+        color: #000;
+      }
+    }
+    &_char.active {
+      color: #9f0013;
+    }
+    &_comics.active {
+      color: #9f0013;
+    }
+    &_div {
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 28px;
+      color: #000000;
+      margin: 0 8px;
+    }
+  }
+}

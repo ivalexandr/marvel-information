@@ -1,0 +1,8 @@
+.main {
+  display: flex;
+  padding-top: 44px;
+  display: grid;
+  grid-template-columns: 650px 425px;
+  column-gap: 25px;
+  align-items: flex-start;
+}
