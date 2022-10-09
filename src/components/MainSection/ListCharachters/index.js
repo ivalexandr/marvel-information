@@ -11,6 +11,7 @@ class ListCharacters extends Component {
     characters: [],
     loading: true,
     error: false,
+    charId: null,
   };
 
   getCharacters = () => {
@@ -33,17 +34,26 @@ class ListCharacters extends Component {
     this.getCharacters();
   }
 
+  onClickCharacter = (id) => {
+    this.props.onCharSelected(id);
+    this.setState({ charId: id });
+  };
+
   render() {
     const { characters, loading, error } = this.state;
     const charactersArray = characters.map((character) => {
+      let isActive = false;
+      if (character.id === this.state.charId) {
+        isActive = true;
+      }
       return (
         <CharacterItem
           key={character.id}
           thumbnail={character.thumbnail}
           name={character.name}
-          active={character.active}
+          active={isActive}
           id={character.id}
-          onClick={this.props.onCharSelected}
+          onClick={this.onClickCharacter}
         />
       );
     });

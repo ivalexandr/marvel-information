@@ -16,11 +16,19 @@
     height: 40px;
     background: #c4c4c4;
     border-radius: 50%;
+    animation-name: skeleton;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
   }
 
   &__line {
     width: 100%;
     background: #c4c4c4;
+    animation-name: skeleton;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
     &_small {
       height: 16px;
     }
@@ -30,5 +38,17 @@
         margin-bottom: 15px;
       }
     }
+  }
+}
+
+@keyframes skeleton {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
   }
 }
