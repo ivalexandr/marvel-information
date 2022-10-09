@@ -1,0 +1,54 @@
+.skeleton {
+  &__heading {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 21px;
+    margin-bottom: 33px;
+  }
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  &__round {
+    min-width: 40px;
+    height: 40px;
+    background: #c4c4c4;
+    border-radius: 50%;
+    animation-name: skeleton;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
+  }
+
+  &__line {
+    width: 100%;
+    background: #c4c4c4;
+    animation-name: skeleton;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
+    &_small {
+      height: 16px;
+    }
+    &_large {
+      height: 35px;
+      &:not(:last-child) {
+        margin-bottom: 15px;
+      }
+    }
+  }
+}
+
+@keyframes skeleton {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

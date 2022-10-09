@@ -1,7 +1,16 @@
 import cn from "classnames";
 import s from "./style.module.scss";
 
-const Button = ({ children, button, onClick, color, type, size, dark }) => {
+const Button = ({
+  children,
+  button,
+  onClick,
+  color,
+  type,
+  size,
+  dark,
+  href,
+}) => {
   if (button) {
     return (
       <button
@@ -15,9 +24,11 @@ const Button = ({ children, button, onClick, color, type, size, dark }) => {
   }
   return (
     <a
-      href=" "
+      href={href}
       className={cn(s.button, s[color], s[size], { [s.red__dark]: dark })}
       onClick={onClick}
+      target="_blank"
+      rel="noreferrer"
     >
       {children}
     </a>

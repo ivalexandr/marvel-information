@@ -1,86 +1,117 @@
+import { Component } from "react";
 import { Button } from "../../Button";
 import { ComicsItem } from "./ComicsItem";
-import loki from "../../../assets/images/characters/loki.jpg";
+import { Spinner } from "../../Spinner";
+import { ErrorMessage } from "../../ErrorMessage";
+import { Skeleton } from "../../Skeleton";
+import ms from "../../../services/MarvelServices";
+import cn from "classnames";
 import s from "./style.module.scss";
 
-const SideBar = () => {
-  const data = [
-    {
-      text: "All-Winners Squad: Band of Heroes (2011) #3",
-      id: 1,
-    },
-    {
-      text: "Alpha Flight (1983) #50",
-      id: 2,
-    },
-    {
-      text: "Amazing Spider-Man (1999) #503",
-      id: 3,
-    },
-    {
-      text: "Amazing Spider-Man (1999) #504",
-      id: 4,
-    },
-    {
-      text: "AMAZING SPIDER-MAN VOL. 7: BOOK OF EZEKIEL TPB (Trade Paperback)",
-      id: 5,
-    },
-    {
-      text: "Amazing-Spider-Man: Worldwide Vol. 8 (Trade Paperback",
-      id: 6,
-    },
-    {
-      text: "Asgardians Of The Galaxy Vol. 2: War Of The Realms (Trade Paperback)",
-      id: 7,
-    },
-    {
-      text: "Vengeance (2011) #4",
-      id: 8,
-    },
-    {
-      text: "Avengers (1963) #1",
-      id: 9,
-    },
-    {
-      text: "Avengers (1996) #1",
-      id: 10,
-    },
-  ];
-  const comicsItemArray = data.map((comics) => (
-    <ComicsItem key={comics.id} text={comics.text} />
-  ));
+class SideBar extends Component {
+  state = {
+    char: null,
+    loading: false,
+    error: false,
+  };
 
-  return (
-    <aside className={s.sidebar}>
-      <div className={s.sidebar__character}>
-        <div className={s.sidebar__img}>
-          <img src={loki} alt="loki" />
-        </div>
-        <div className={s.sidebar__nav}>
-          <span className={s.sidebar__name}>LOKI</span>
-          <div className={s.sidebar__btns}>
-            <Button button type="button" color="red" size="normal">
-              HOMEPAGE
-            </Button>
-            <Button button type="button" color="grey" size="normal">
-              WIKI
-            </Button>
+  updateChar = () => {
+    const { character } = this.props;
+    if (!character) {
+      return;
+    }
+    this.onCharLoading();
+    ms.getOneCharacter(character)
+      .then(this.onCharLoaded)
+      .catch(this.onCharError);
+  };
+
+  renderSideBar = () => {
+    const { name, thumbnail, description, comics, homepage, wiki } =
+      this.state.char;
+    const spliceArray = comics.length > 10 ? comics.splice(0, 10) : comics;
+    const comicsItemArray = spliceArray.map((item, index) => (
+      <ComicsItem key={index} text={item.name} href={item.resourceURI} />
+    ));
+    const emptyComicsArray = !comicsItemArray.length && (
+      <li className={s.sidebar__notComics}>Comics are not found...</li>
+    );
+    const emptyDescription = !description && (
+      <span>Description is not found...</span>
+    );
+    const isImageNotFound = thumbnail.includes("image_not_available");
+    return (
+      <>
+        <div className={s.sidebar__character}>
+          <div
+            className={cn(s.sidebar__img, {
+              [s.sidebar__img_contain]: isImageNotFound,
+            })}
+          >
+            <img src={thumbnail} alt={name} />
+          </div>
+          <div className={s.sidebar__nav}>
+            <span className={s.sidebar__name}>{name}</span>
+            <div className={s.sidebar__btns}>
+              <Button type="button" color="red" size="normal" href={homepage}>
+                HOMEPAGE
+              </Button>
+              <Button type="button" color="grey" size="normal" href={wiki}>
+                WIKI
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-      <p className={s.sidebar__descr}>
-        In Norse mythology, Loki is a god or jötunn (or both). Loki is the son
-        of Fárbauti and Laufey, and the brother of Helblindi and Býleistr. By
-        the jötunn Angrboða, Loki is the father of Hel, the wolf Fenrir, and the
-        world serpent Jörmungandr. By Sigyn, Loki is the father of Nari and/or
-        Narfi and with the stallion Svaðilfari as the father, Loki gave birth—in
-        the form of a mare—to the eight-legged horse Sleipnir. In addition, Loki
-        is referred to as the father of Váli in the Prose Edda.
-      </p>
-      <h2 className={s.sidebar__heading}>Comics:</h2>
-      <ul className={s.sidebar__list}>{comicsItemArray}</ul>
-    </aside>
-  );
-};
+        <p className={s.sidebar__descr}>
+          {emptyDescription}
+          {description}
+        </p>
+        <h2 className={s.sidebar__heading}>Comics:</h2>
+        <ul className={s.sidebar__list}>
+          {emptyComicsArray}
+          {comicsItemArray}
+        </ul>
+      </>
+    );
+  };
+
+  onCharLoaded = (char) => {
+    this.setState({ char, loading: false, error: false });
+  };
+
+  onCharLoading = () => {
+    this.setState({ loading: true });
+  };
+
+  onCharError = () => {
+    this.setState({ error: true });
+  };
+
+  componentDidMount() {
+    this.updateChar();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.character !== prevProps.character) {
+      this.updateChar();
+    }
+  }
+
+  render() {
+    const { char, loading, error } = this.state;
+    const skeleton = !(char || loading || error) && <Skeleton />;
+    const errorMessage = error && <ErrorMessage />;
+    const spinner = loading && <Spinner />;
+    const content = !(error || loading || !char) && this.renderSideBar();
+    return (
+      <aside className={s.sidebar}>
+        {skeleton}
+        {errorMessage}
+        {spinner}
+        {content}
+      </aside>
+    );
+  }
+}
 
 export { SideBar };
