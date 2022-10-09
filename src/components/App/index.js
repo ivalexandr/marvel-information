@@ -5,11 +5,13 @@ import s from "./style.module.scss";
 
 const App = () => {
   return (
-    <div className={s.app}>
+    <>
       <Header />
-      <Banner />
-      <MainSection />
-    </div>
+      <main className={s.app}>
+        <Banner />
+        <MainSection />
+      </main>
+    </>
   );
 };
 

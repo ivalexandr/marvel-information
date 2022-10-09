@@ -42,6 +42,8 @@ class ListCharacters extends Component {
           thumbnail={character.thumbnail}
           name={character.name}
           active={character.active}
+          id={character.id}
+          onClick={this.props.onCharSelected}
         />
       );
     });

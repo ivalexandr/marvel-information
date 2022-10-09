@@ -76,7 +76,6 @@ class Banner extends Component {
     if (error) {
       this.setState({ error: false });
     }
-
     this.updateChar(randomGenerator(1011000, 1011400));
   };
 

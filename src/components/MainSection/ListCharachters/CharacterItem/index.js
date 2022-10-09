@@ -1,10 +1,16 @@
 import cn from "classnames";
 import s from "./style.module.scss";
 
-const CharacterItem = ({ active, name, thumbnail }) => {
+const CharacterItem = ({ active, name, thumbnail, onClick, id }) => {
   const isImageNotFound = thumbnail.includes("image_not_available");
+  const clickHandler = () => {
+    onClick && onClick(id);
+  };
   return (
-    <li className={cn(s.character, { [s.character_active]: active })}>
+    <li
+      onClick={clickHandler}
+      className={cn(s.character, { [s.character_active]: active })}
+    >
       <div className={s.character__img}>
         <img
           src={thumbnail}

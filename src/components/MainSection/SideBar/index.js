@@ -1,10 +1,20 @@
+import { Component } from "react";
 import { Button } from "../../Button";
 import { ComicsItem } from "./ComicsItem";
+import { Spinner } from "../../Spinner";
+import { ErrorMessage } from "../../ErrorMessage";
+import { Skeleton } from "../../Skeleton";
+import ms from "../../../services/MarvelServices";
 import loki from "../../../assets/images/characters/loki.jpg";
 import s from "./style.module.scss";
 
-const SideBar = () => {
-  const data = [
+class SideBar extends Component {
+  state = {
+    char: null,
+    loading: false,
+    error: false,
+  };
+  data = [
     {
       text: "All-Winners Squad: Band of Heroes (2011) #3",
       id: 1,
@@ -46,41 +56,81 @@ const SideBar = () => {
       id: 10,
     },
   ];
-  const comicsItemArray = data.map((comics) => (
-    <ComicsItem key={comics.id} text={comics.text} />
-  ));
 
-  return (
-    <aside className={s.sidebar}>
-      <div className={s.sidebar__character}>
-        <div className={s.sidebar__img}>
-          <img src={loki} alt="loki" />
-        </div>
-        <div className={s.sidebar__nav}>
-          <span className={s.sidebar__name}>LOKI</span>
-          <div className={s.sidebar__btns}>
-            <Button button type="button" color="red" size="normal">
-              HOMEPAGE
-            </Button>
-            <Button button type="button" color="grey" size="normal">
-              WIKI
-            </Button>
+  updateChar = () => {
+    const { character } = this.props;
+    console.log(character);
+    if (!character) {
+      return;
+    }
+    this.onCharLoading();
+    ms.getOneCharacter(character)
+      .then(this.onCharLoaded)
+      .catch(this.onCharError);
+  };
+
+  renderSideBar = () => {
+    const comicsItemArray = this.data.map((comics) => (
+      <ComicsItem key={comics.id} text={comics.text} />
+    ));
+    return (
+      <>
+        <div className={s.sidebar__character}>
+          <div className={s.sidebar__img}>
+            <img src={loki} alt="loki" />
+          </div>
+          <div className={s.sidebar__nav}>
+            <span className={s.sidebar__name}>LOKI</span>
+            <div className={s.sidebar__btns}>
+              <Button button type="button" color="red" size="normal">
+                HOMEPAGE
+              </Button>
+              <Button button type="button" color="grey" size="normal">
+                WIKI
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-      <p className={s.sidebar__descr}>
-        In Norse mythology, Loki is a god or jötunn (or both). Loki is the son
-        of Fárbauti and Laufey, and the brother of Helblindi and Býleistr. By
-        the jötunn Angrboða, Loki is the father of Hel, the wolf Fenrir, and the
-        world serpent Jörmungandr. By Sigyn, Loki is the father of Nari and/or
-        Narfi and with the stallion Svaðilfari as the father, Loki gave birth—in
-        the form of a mare—to the eight-legged horse Sleipnir. In addition, Loki
-        is referred to as the father of Váli in the Prose Edda.
-      </p>
-      <h2 className={s.sidebar__heading}>Comics:</h2>
-      <ul className={s.sidebar__list}>{comicsItemArray}</ul>
-    </aside>
-  );
-};
+        <p className={s.sidebar__descr}>
+          In Norse mythology, Loki is a god or jötunn (or both). Loki is the son
+          of Fárbauti and Laufey, and the brother of Helblindi and Býleistr. By
+          the jötunn Angrboða, Loki is the father of Hel, the wolf Fenrir, and
+          the world serpent Jörmungandr. By Sigyn, Loki is the father of Nari
+          and/or Narfi and with the stallion Svaðilfari as the father, Loki gave
+          birth—in the form of a mare—to the eight-legged horse Sleipnir. In
+          addition, Loki is referred to as the father of Váli in the Prose Edda.
+        </p>
+        <h2 className={s.sidebar__heading}>Comics:</h2>
+        <ul className={s.sidebar__list}>{comicsItemArray}</ul>
+      </>
+    );
+  };
+
+  onCharLoaded = (char) => {
+    this.setState({ char, loading: false, error: false });
+  };
+
+  onCharLoading = () => {
+    this.setState({ loading: true });
+  };
+
+  onCharError = () => {
+    this.setState({ error: true });
+  };
+
+  componentDidMount() {
+    this.updateChar();
+  }
+
+  render() {
+    const { char, loading, error } = this.state;
+    this.renderSideBar();
+    return (
+      <aside className={s.sidebar}>
+        <Skeleton />
+      </aside>
+    );
+  }
+}
 
 export { SideBar };
