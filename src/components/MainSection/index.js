@@ -2,6 +2,7 @@ import { Component } from "react";
 import { Container } from "../Container";
 import { ListCharacters } from "./ListCharachters";
 import { SideBar } from "./SideBar";
+import { ErrorBoundary } from "../ErrorBoundary";
 import s from "./style.module.scss";
 
 class MainSection extends Component {
@@ -19,7 +20,9 @@ class MainSection extends Component {
       <Container>
         <div className={s.main}>
           <ListCharacters onCharSelected={this.onCharSelected} />
-          <SideBar character={selectedChar} />
+          <ErrorBoundary>
+            <SideBar character={selectedChar} />
+          </ErrorBoundary>
         </div>
       </Container>
     );
