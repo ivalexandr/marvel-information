@@ -1,6 +1,6 @@
 class MarvelServices {
   #url = new URL("/v1/public/", "https://gateway.marvel.com");
-
+  #baseOffsetCharacters = 210;
   #setQueriesToUrl = (url, arrayQueries) => {
     url.searchParams.set("apikey", "e958f1be5847ed91f8256a4e89a69d0f");
     arrayQueries &&
@@ -33,7 +33,7 @@ class MarvelServices {
     };
   };
 
-  getAllCharacters = async () => {
+  getAllCharacters = async (offset = this.#baseOffsetCharacters) => {
     const url = new URL("characters", this.#url);
     this.#setQueriesToUrl(url, [
       {
@@ -42,7 +42,7 @@ class MarvelServices {
       },
       {
         param: "offset",
-        value: 210,
+        value: offset,
       },
     ]);
     const characters = await this.#getResources(url);

@@ -12,18 +12,7 @@ class ListCharacters extends Component {
     loading: true,
     error: false,
     charId: null,
-  };
-
-  getCharacters = () => {
-    ms.getAllCharacters()
-      .then((res) => {
-        this.setState((prevState) => ({
-          ...prevState,
-          characters: res,
-          loading: false,
-        }));
-      })
-      .catch(this.catchError);
+    newItemsLoading: false,
   };
 
   catchError = () => {
@@ -31,12 +20,32 @@ class ListCharacters extends Component {
   };
 
   componentDidMount() {
-    this.getCharacters();
+    this.onRequest();
   }
+
+  charLoaded = (characters) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      characters,
+      loading: false,
+      newItemsLoading: false,
+    }));
+  };
+
+  onRequest = (offset) => {
+    this.onCharListLoading();
+    ms.getAllCharacters(offset).then(this.charLoaded).catch(this.catchError);
+  };
 
   onClickCharacter = (id) => {
     this.props.onCharSelected(id);
     this.setState({ charId: id });
+  };
+
+  onCharListLoading = () => {
+    this.setState({
+      newItemsLoading: true,
+    });
   };
 
   render() {
