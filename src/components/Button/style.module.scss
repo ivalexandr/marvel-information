@@ -45,6 +45,9 @@
     border-bottom: 5px solid #fff;
     transition: none;
   }
+  &:disabled {
+    filter: grayscale(0.5);
+  }
 }
 
 .red {

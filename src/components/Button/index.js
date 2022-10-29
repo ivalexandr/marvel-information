@@ -10,6 +10,8 @@ const Button = ({
   size,
   dark,
   href,
+  disabled,
+  style,
 }) => {
   if (button) {
     return (
@@ -17,6 +19,8 @@ const Button = ({
         type={type}
         className={cn(s.button, s[color], s[size], { [s.red__dark]: dark })}
         onClick={onClick}
+        disabled={disabled}
+        style={style}
       >
         {children}
       </button>
