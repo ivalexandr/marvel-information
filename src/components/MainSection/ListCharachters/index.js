@@ -13,6 +13,8 @@ class ListCharacters extends Component {
     error: false,
     charId: null,
     newItemsLoading: false,
+    offset: 210,
+    charEnded: false,
   };
 
   catchError = () => {
@@ -23,12 +25,13 @@ class ListCharacters extends Component {
     this.onRequest();
   }
 
-  charLoaded = (characters) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      characters,
+  charLoaded = (newCharacters) => {
+    this.setState(({ characters, offset }) => ({
+      characters: [...characters, ...newCharacters],
       loading: false,
       newItemsLoading: false,
+      offset: offset + 9,
+      charEnded: newCharacters.length < 9,
     }));
   };
 
@@ -49,7 +52,8 @@ class ListCharacters extends Component {
   };
 
   render() {
-    const { characters, loading, error } = this.state;
+    const { characters, loading, error, newItemsLoading, offset, charEnded } =
+      this.state;
     const charactersArray = characters.map((character) => {
       let isActive = false;
       if (character.id === this.state.charId) {
@@ -77,7 +81,15 @@ class ListCharacters extends Component {
           {content}
         </ul>
         <div className={s.characterList__more}>
-          <Button button color="red" type="button" size="large">
+          <Button
+            button
+            color="red"
+            type="button"
+            size="large"
+            disabled={newItemsLoading}
+            onClick={() => this.onRequest(offset)}
+            style={{ display: charEnded ? "none" : "block" }}
+          >
             LOAD MORE
           </Button>
         </div>
