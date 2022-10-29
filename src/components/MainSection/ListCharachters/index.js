@@ -1,4 +1,5 @@
 import { Component } from "react";
+import PropTypes from "prop-types";
 import { CharacterItem } from "./CharacterItem";
 import { Button } from "../../Button";
 import { Spinner } from "../../Spinner";
@@ -97,5 +98,9 @@ class ListCharacters extends Component {
     );
   }
 }
+
+ListCharacters.propTypes = {
+  onCharSelected: PropTypes.func,
+};
 
 export { ListCharacters };
