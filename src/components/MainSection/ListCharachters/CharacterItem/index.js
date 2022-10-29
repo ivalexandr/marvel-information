@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import cn from "classnames";
 import s from "./style.module.scss";
 
@@ -21,6 +22,14 @@ const CharacterItem = ({ active, name, thumbnail, onClick, id }) => {
       <h3 className={s.character__name}>{name}</h3>
     </li>
   );
+};
+
+CharacterItem.propTypes = {
+  active: PropTypes.bool,
+  name: PropTypes.string,
+  thumbnail: PropTypes.string,
+  onClick: PropTypes.func,
+  id: PropTypes.number,
 };
 
 export { CharacterItem };
