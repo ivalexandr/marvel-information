@@ -12,7 +12,9 @@ const MainSection = () => {
   return (
     <Container>
       <div className={s.main}>
-        <ListCharacters onCharSelected={onCharSelected} />
+        <ErrorBoundary>
+          <ListCharacters onCharSelected={onCharSelected} />
+        </ErrorBoundary>
         <ErrorBoundary>
           <SideBar character={selectedChar} />
         </ErrorBoundary>
