@@ -1,0 +1,14 @@
+.list {
+  margin-top: 49px;
+  display: grid;
+  grid-template-columns: repeat(4, 225px);
+  grid-auto-rows: 415px;
+  column-gap: 67px;
+  row-gap: 55px;
+  margin-bottom: 47px;
+  &__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

@@ -1,7 +1,5 @@
 import { Header } from "../Header";
-import { Banner } from "../Banner";
-import { MainSection } from "../MainSection";
-import bg from "../../assets/images/bg_app.png";
+import { ComicsPage } from "../../pages/ComicsPage";
 import s from "./style.module.scss";
 
 const App = () => {
@@ -9,12 +7,8 @@ const App = () => {
     <div className={s.app}>
       <Header />
       <main>
-        <Banner />
-        <MainSection />
+        <ComicsPage />
       </main>
-      <div className={s.app__background}>
-        <img src={bg} alt="background" />
-      </div>
     </div>
   );
 };
