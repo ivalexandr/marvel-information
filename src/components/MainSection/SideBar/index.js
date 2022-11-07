@@ -4,7 +4,7 @@ import { ComicsItem } from "./ComicsItem";
 import { Spinner } from "../../Spinner";
 import { ErrorMessage } from "../../ErrorMessage";
 import { Skeleton } from "../../Skeleton";
-import ms from "../../../services/MarvelServices";
+import { useMarvelServices } from "../../../services/MarvelServices";
 import cn from "classnames";
 import s from "./style.module.scss";
 
@@ -12,6 +12,8 @@ const SideBar = ({ character }) => {
   const [char, setChar] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(false);
+
+  const { getOneCharacter } = useMarvelServices();
 
   useEffect(() => {
     updateChar();
@@ -34,7 +36,7 @@ const SideBar = ({ character }) => {
       return;
     }
     setLoading(true);
-    ms.getOneCharacter(character)
+    getOneCharacter(character)
       .then(onCharLoaded)
       .catch(() => setError(true));
   };

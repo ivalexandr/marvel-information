@@ -5,8 +5,8 @@ import { Spinner } from "../Spinner";
 import { ErrorMessage } from "../ErrorMessage";
 import { randomGenerator } from "../../services/randomGenerator";
 import { elipsisStr } from "../../services/funcs";
+import { useMarvelServices } from "../../services/MarvelServices";
 import cn from "classnames";
-import ms from "../../services/MarvelServices";
 import s from "./style.module.scss";
 
 const Banner = () => {
@@ -15,8 +15,9 @@ const Banner = () => {
   const [thumbnail, setThumbnail] = useState(null);
   const [homepage, setHomepage] = useState(null);
   const [wiki, setWiki] = useState(null);
-  const [isLoading, setLoading] = useState(true);
-  const [isError, setError] = useState(false);
+
+  const { isLoading, isError, getOneCharacter, clearError } =
+    useMarvelServices();
 
   useEffect(() => {
     updateChar(randomGenerator(1011000, 1011400));
@@ -29,27 +30,20 @@ const Banner = () => {
     setThumbnail(thumbnail);
     setHomepage(homepage);
     setWiki(wiki);
-    setLoading(false);
   };
 
   const updateChar = (id) => {
-    ms.getOneCharacter(id).then(onCharLoaded).catch(catchError);
-  };
-
-  const catchError = () => {
-    setLoading(false);
-    setError(true);
+    clearError();
+    getOneCharacter(id).then(onCharLoaded);
   };
 
   const clickRandomHandler = () => {
-    setLoading(true);
-    if (isError) setError(false);
     updateChar(randomGenerator(1011000, 1011400));
   };
 
   const errorMessage = isError && <ErrorMessage />;
   const spinner = isLoading && <Spinner />;
-  const content = !(isError || isLoading) && (
+  const content = !(isError || isLoading || !name) && (
     <Character
       name={name}
       thumbnail={thumbnail}
