@@ -1,29 +1,26 @@
-import { Component } from "react";
+import { useState } from "react";
 import { Container } from "../Container";
 import { ListCharacters } from "./ListCharachters";
 import { SideBar } from "./SideBar";
+import { ErrorBoundary } from "../ErrorBoundary";
 import s from "./style.module.scss";
 
-class MainSection extends Component {
-  state = {
-    selectedChar: null,
-  };
+const MainSection = () => {
+  const [selectedChar, setSelectedChar] = useState(null);
+  const onCharSelected = (id) => setSelectedChar(id);
 
-  onCharSelected = (id) => {
-    this.setState({ selectedChar: id });
-  };
-
-  render() {
-    const { selectedChar } = this.state;
-    return (
-      <Container>
-        <div className={s.main}>
-          <ListCharacters onCharSelected={this.onCharSelected} />
+  return (
+    <Container>
+      <div className={s.main}>
+        <ErrorBoundary>
+          <ListCharacters onCharSelected={onCharSelected} />
+        </ErrorBoundary>
+        <ErrorBoundary>
           <SideBar character={selectedChar} />
-        </div>
-      </Container>
-    );
-  }
-}
+        </ErrorBoundary>
+      </div>
+    </Container>
+  );
+};
 
 export { MainSection };

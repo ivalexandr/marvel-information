@@ -1,7 +1,12 @@
-class MarvelServices {
-  #url = new URL("/v1/public/", "https://gateway.marvel.com");
+import { useHttp } from "../hooks/http-hook";
 
-  #setQueriesToUrl = (url, arrayQueries) => {
+const useMarvelServices = () => {
+  const { isLoading, isError, request, clearError } = useHttp();
+
+  const url = new URL("/v1/public/", "https://gateway.marvel.com");
+  const baseOffsetCharacters = 210;
+
+  const setQueriesToUrl = (url, arrayQueries) => {
     url.searchParams.set("apikey", "e958f1be5847ed91f8256a4e89a69d0f");
     arrayQueries &&
       arrayQueries.forEach(({ param, value }) => {
@@ -9,19 +14,7 @@ class MarvelServices {
       });
   };
 
-  #getResources = async (url) => {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error(res.statusText);
-      }
-      return await res.json();
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  #transformCharacter = (res) => {
+  const transformCharacter = (res) => {
     return {
       id: res.id,
       name: res.name,
@@ -33,28 +26,30 @@ class MarvelServices {
     };
   };
 
-  getAllCharacters = async () => {
-    const url = new URL("characters", this.#url);
-    this.#setQueriesToUrl(url, [
+  const getAllCharacters = async (offset = baseOffsetCharacters) => {
+    const newUrl = new URL("characters", url);
+    setQueriesToUrl(newUrl, [
       {
         param: "limit",
         value: 9,
       },
       {
         param: "offset",
-        value: 210,
+        value: offset,
       },
     ]);
-    const characters = await this.#getResources(url);
-    return characters.data.results.map(this.#transformCharacter);
+    const characters = await request(newUrl);
+    return characters.data.results.map(transformCharacter);
   };
 
-  getOneCharacter = async (id) => {
-    const url = new URL(`characters/${id}`, this.#url);
-    this.#setQueriesToUrl(url);
-    const character = await this.#getResources(url);
-    return this.#transformCharacter(character.data.results[0]);
+  const getOneCharacter = async (id) => {
+    const newUrl = new URL(`characters/${id}`, url);
+    setQueriesToUrl(newUrl);
+    const character = await request(newUrl);
+    return transformCharacter(character.data.results[0]);
   };
-}
 
-export default new MarvelServices();
+  return { isLoading, isError, getOneCharacter, getAllCharacters, clearError };
+};
+
+export { useMarvelServices };
